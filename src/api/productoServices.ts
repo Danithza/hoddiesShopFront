@@ -14,9 +14,9 @@ export const productService = {
     return response.data
   },
 
-  // Obtener productos por categoría
+  // ✅ Obtener productos por categoría (usando el endpoint real)
   async getProductsByCategory(categoryId: number): Promise<Product[]> {
-    const response = await api.get(`/products?category=${categoryId}`)
+    const response = await api.get(`/products/categoria/id/${categoryId}`)
     return response.data
-  }
+  },
 }
