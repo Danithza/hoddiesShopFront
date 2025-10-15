@@ -65,6 +65,8 @@ const navItems = ref([
   { title: 'Inicio', to: '/' },
   { title: 'Productos', to: '/productos' },
   { title: 'Contacto', to: '/contacto' },
+  { title: 'Registro', to: '/registro' },
+  { title: 'Login', to: '/login' },
 ])
 
 // Categorías según tu router

@@ -28,6 +28,10 @@ const router = createRouter({
         { path: 'sacos', name: 'sacos', component: SacosView },
         { path: 'busos', name: 'busos', component: BusosView },
         { path: 'medias', name: 'medias', component: MediasView },
+
+        // 👤 Autenticació
+        { path: 'registro', name: 'registro', component: () => import('@/views/RegistroView.vue') },
+        { path: 'login', name: 'login', component: () => import('@/views/LoginView.vue') },
       ],
     },
   ],
