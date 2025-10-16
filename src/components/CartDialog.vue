@@ -10,7 +10,7 @@
           >
             <!-- Avatar -->
             <v-img
-              :src="item.product.image_url || '/images/placeholder.jpg'"
+              :src="item.product.imageUrl || '/images/placeholder.jpg'"
               class="mr-4"
               max-width="64"
               max-height="64"

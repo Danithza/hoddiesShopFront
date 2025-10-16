@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="visible" max-width="600px">
     <v-card>
-      <v-img :src="producto.image_url" height="300px" cover />
+      <v-img :src="producto.imageUrl" height="300px" cover />
       <v-card-title>{{ producto.name }}</v-card-title>
       <v-card-subtitle>Precio: ${{ producto.price }}</v-card-subtitle>
       <v-card-text>
