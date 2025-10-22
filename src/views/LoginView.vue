@@ -2,13 +2,20 @@
   <section class="login">
     <h1>Iniciar Sesión</h1>
 
-    <form class="formulario" @submit.prevent="iniciarSesion">
+    <!-- Mostrar botón si ya está logueado -->
+    <div v-if="usuario">
+      <p>👋 Hola, {{ usuario.fullName }}</p>
+      <button class="boton salir" @click="cerrarSesion">Cerrar sesión</button>
+    </div>
+
+    <!-- Mostrar formulario si no hay usuario -->
+    <form v-else class="formulario" @submit.prevent="iniciarSesion">
       <div class="campo">
         <label for="correo">Correo electrónico</label>
         <input
           type="email"
           id="correo"
-          v-model="correo"
+          v-model.trim="correo"
           placeholder="ejemplo@email.com"
           required
         />
@@ -19,7 +26,7 @@
         <input
           type="password"
           id="password"
-          v-model="password"
+          v-model.trim="password"
           placeholder="••••••••"
           required
         />
@@ -36,14 +43,75 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+import { useRouter } from 'vue-router'
 
 const correo = ref('')
 const password = ref('')
+const usuario = ref(null)
+const router = useRouter()
 
-function iniciarSesion() {
-  console.log('Iniciando sesión con:', correo.value, password.value)
-  alert('Inicio de sesión simulado (todavía no conectado al backend)')
+// 🔹 Verificar si ya hay usuario logueado
+onMounted(() => {
+  const storedUser = localStorage.getItem('usuario')
+  if (storedUser) {
+    usuario.value = JSON.parse(storedUser)
+  }
+})
+
+// 🔹 Iniciar sesión
+async function iniciarSesion() {
+  try {
+    if (!correo.value || !password.value) {
+      Swal.fire('⚠️ Campos vacíos', 'Por favor ingresa tus datos.', 'warning')
+      return
+    }
+
+    const res = await axios.post('http://localhost:3333/login', {
+      email: correo.value,
+      password: password.value,
+    })
+
+    // Guardar token y usuario en localStorage
+    localStorage.setItem('token', res.data.token)
+    localStorage.setItem('usuario', JSON.stringify(res.data.user))
+    usuario.value = res.data.user
+
+    Swal.fire({
+      icon: 'success',
+      title: '¡Bienvenido!',
+      text: `Inicio de sesión exitoso, ${res.data.user.fullName}.`,
+      timer: 2000,
+      showConfirmButton: false,
+    })
+
+    router.push('/')
+  } catch (err) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text:
+        err.response?.data?.message ||
+        'Correo o contraseña incorrectos. Intenta nuevamente.',
+    })
+  }
+}
+
+// 🔹 Cerrar sesión
+function cerrarSesion() {
+  localStorage.removeItem('token')
+  localStorage.removeItem('usuario')
+  usuario.value = null
+
+  Swal.fire({
+    icon: 'info',
+    title: 'Sesión cerrada',
+    text: 'Has cerrado sesión correctamente.',
+    timer: 2000,
+    showConfirmButton: false,
+  })
 }
 </script>
 
@@ -53,6 +121,7 @@ function iniciarSesion() {
   flex-direction: column;
   align-items: center;
   padding: 50px 20px;
+  animation: fadeIn 0.5s ease;
 }
 
 h1 {
@@ -85,6 +154,12 @@ input {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #ccc;
+  transition: border 0.3s;
+}
+
+input:focus {
+  border-color: #1e40af;
+  outline: none;
 }
 
 .boton {
@@ -103,8 +178,29 @@ input {
   background-color: #3b82f6;
 }
 
+.salir {
+  background-color: #dc2626;
+  width: auto;
+  margin-top: 10px;
+}
+
+.salir:hover {
+  background-color: #ef4444;
+}
+
 .texto {
   margin-top: 15px;
   text-align: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

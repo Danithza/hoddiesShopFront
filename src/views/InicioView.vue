@@ -67,14 +67,54 @@
         </v-container>
       </v-parallax>
     </section>
+
+    <!-- 🆕 Sección de Productos Nuevos (fuera del hero) -->
+    <section class="nuevos-productos py-12">
+      <v-container>
+        <h2 class="text-h4 font-weight-bold text-center text-primary mb-8">
+          Lo mas nuevo
+        </h2>
+
+        <v-row justify="center" align="stretch">
+          <v-col
+            v-for="product in nuevosProductos"
+            :key="product.id"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+          >
+            <v-card
+              class="pa-4 text-center hover:shadow-lg"
+              elevation="8"
+              @click="goToProduct(product.id)"
+            >
+              <v-img
+                :src="getImageUrl(product.imageUrl)"
+                height="200px"
+                cover
+                class="rounded-lg"
+                @error="onImageError"
+              ></v-img>
+              <h3 class="mt-3 text-h6 font-weight-bold text-primary">
+                {{ product.name }}
+              </h3>
+              <p class="text-h6 text-grey-darken-1 mb-3">
+                ${{ product.price }}
+              </p>
+              <v-btn color="secondary" variant="flat">Ver detalle</v-btn>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </section>
   </v-main>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, onBeforeUnmount } from 'vue'
+import { onMounted, ref, onBeforeUnmount, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useProductStore } from '../stores/products'
-import type { Product } from '../types/product'
 
 const productStore = useProductStore()
 const router = useRouter()
@@ -85,18 +125,16 @@ let intervalId: number | null = null
 onMounted(async () => {
   await productStore.fetchProducts()
 
-  // ✅ Animación automática cada 3s
-  const speed = 1 // velocidad de movimiento (px por frame)
+  // ✅ Animación automática del carrusel
+  const speed = 1
   intervalId = window.setInterval(() => {
-    const trackWidth = document.querySelector('.carousel-track')?.scrollWidth || 0
-    const containerWidth = document.querySelector('.carousel-container')?.clientWidth || 0
+    const trackWidth =
+      document.querySelector('.carousel-track')?.scrollWidth || 0
+    const containerWidth =
+      document.querySelector('.carousel-container')?.clientWidth || 0
     scrollX.value += speed
-
-    // Reinicia el scroll cuando llega al final
-    if (scrollX.value >= trackWidth - containerWidth) {
-      scrollX.value = 0
-    }
-  }, 20) // cada 20ms para fluidez (~50fps)
+    if (scrollX.value >= trackWidth - containerWidth) scrollX.value = 0
+  }, 20)
 })
 
 onBeforeUnmount(() => {
@@ -105,7 +143,9 @@ onBeforeUnmount(() => {
 
 const getImageUrl = (imageUrl: string | null | undefined): string => {
   if (!imageUrl) return placeholderImage
-  return `http://localhost:3333${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`
+  return `http://localhost:3333${
+    imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl
+  }`
 }
 
 const onImageError = (event: Event) => {
@@ -116,6 +156,11 @@ const onImageError = (event: Event) => {
 const goToProduct = (productId: number) => {
   router.push(`/producto/${productId}`)
 }
+
+// Mostrar los productos más nuevos (últimos 4)
+const nuevosProductos = computed(() =>
+  [...productStore.products].reverse().slice(0, 4)
+)
 </script>
 
 <style scoped>
@@ -152,5 +197,17 @@ const goToProduct = (productId: number) => {
 .product-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/*  Sección de nuevos productos */
+.nuevos-productos {
+  background-color: #f5f7fa;
+}
+.nuevos-productos .v-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.nuevos-productos .v-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.2);
 }
 </style>
