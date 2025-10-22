@@ -5,7 +5,7 @@
         <!-- Imagen del producto -->
         <v-col cols="12" md="6">
           <v-img
-            :src="product.image_url || '/placeholder-product.jpg'"
+            :src="product.imageUrl || '/placeholder-product.jpg'"
             :alt="product.name"
             height="500"
             cover

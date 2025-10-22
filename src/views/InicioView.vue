@@ -4,142 +4,153 @@
     <section class="hero-section">
       <v-parallax
         src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"
-        height="600"
+        height="800"
       >
-        <v-container class="fill-height">
-          <v-row align="center" justify="center">
-            <v-col cols="12" class="text-center">
-              <h1 class="text-h2 text-md-h1 font-weight-bold text-white mb-4">
-                HoddieShop
-              </h1>
-              <p class="text-h5 text-md-h4 text-white mb-8">
-                Los mejores hoodies, buzos y medias
-              </p>
-              <v-btn
-                size="x-large"
-                color="secondary"
-                variant="flat"
-                to="/productos"
-                class="px-8"
-              >
-                <v-icon start>mdi-shopping</v-icon>
-                Comprar Ahora
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-parallax>
-    </section>
+        <v-container
+          class="fill-height d-flex flex-column justify-center align-center text-center text-white"
+        >
+          <h1 class="text-h2 text-md-h1 font-weight-bold mb-4">HoddieShop</h1>
+          <p class="text-h5 text-md-h4 mb-8">
+            Los mejores hoodies, buzos y medias
+          </p>
 
-    <!-- Featured Products -->
-    <section class="featured-products py-16">
-      <v-container>
-        <v-row>
-          <v-col cols="12" class="text-center mb-8">
-            <h2 class="text-h3 font-weight-bold text-primary mb-4">
+          <v-btn
+            size="x-large"
+            color="secondary"
+            variant="flat"
+            to="/productos"
+            class="px-8 mb-10"
+          >
+            <v-icon start>mdi-shopping</v-icon>
+            Comprar Ahora
+          </v-btn>
+
+          <!-- 🎠 Carrusel automático de productos -->
+          <v-sheet
+            class="pa-6 rounded-xl bg-white bg-opacity-90"
+            width="100%"
+            elevation="10"
+          >
+            <h2 class="text-h5 font-weight-bold text-primary mb-4 text-center">
               Productos Destacados
             </h2>
-            <p class="text-h6 text-grey-darken-2">
-              Descubre nuestra colección más popular
-            </p>
-          </v-col>
-        </v-row>
 
-        <v-row v-if="productStore.loading">
-          <v-col v-for="n in 4" :key="n" cols="12" sm="6" md="3">
-            <v-skeleton-loader type="image, heading, text, button"></v-skeleton-loader>
-          </v-col>
-        </v-row>
-
-        <v-row v-else>
-          <v-col
-            v-for="product in productStore.featuredProducts"
-            :key="product.id"
-            cols="12"
-            sm="6"
-            md="3"
-          >
-            <ProductCard
-              :product="product"
-              @add-to-cart="addToCart"
-            />
-          </v-col>
-        </v-row>
-
-        <v-row v-if="productStore.error">
-          <v-col cols="12" class="text-center">
-            <v-alert type="error" variant="tonal">
-              {{ productStore.error }}
-            </v-alert>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="12" class="text-center mt-8">
-            <v-btn
-              size="large"
-              color="primary"
-              variant="outlined"
-              to="/productos"
-            >
-              Ver Todos los Productos
-            </v-btn>
-          </v-col>
-        </v-row>
-      </v-container>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features-section py-16 bg-grey-lighten-4">
-      <v-container>
-        <v-row>
-          <v-col cols="12" md="4" class="text-center">
-            <v-icon size="64" color="primary" class="mb-4">mdi-truck-fast</v-icon>
-            <h3 class="text-h5 font-weight-bold text-primary mb-2">
-              Envío Gratis
-            </h3>
-            <p class="text-grey-darken-2">
-              Envío gratuito en compras superiores a $50
-            </p>
-          </v-col>
-
-          <v-col cols="12" md="4" class="text-center">
-            <v-icon size="64" color="primary" class="mb-4">mdi-shield-check</v-icon>
-            <h3 class="text-h5 font-weight-bold text-primary mb-2">
-              Calidad Garantizada
-            </h3>
-            <p class="text-grey-darken-2">
-              Productos de la mejor calidad del mercado
-            </p>
-          </v-col>
-
-          <v-col cols="12" md="4" class="text-center">
-            <v-icon size="64" color="primary" class="mb-4">mdi-headset</v-icon>
-            <h3 class="text-h5 font-weight-bold text-primary mb-2">
-              Soporte 24/7
-            </h3>
-            <p class="text-grey-darken-2">
-              Atención al cliente disponible todo el día
-            </p>
-          </v-col>
-        </v-row>
-      </v-container>
+            <div class="carousel-container">
+              <div
+                class="carousel-track"
+                :style="{ transform: `translateX(-${scrollX}px)` }"
+              >
+                <div
+                  v-for="product in productStore.products"
+                  :key="product.id"
+                  class="carousel-item"
+                  @click="goToProduct(product.id)"
+                >
+                  <v-card flat elevation="6" class="product-card">
+                    <v-img
+                      :src="getImageUrl(product.imageUrl)"
+                      height="200"
+                      cover
+                      @error="onImageError"
+                    ></v-img>
+                    <v-card-title class="text-primary text-center">
+                      {{ product.name }}
+                    </v-card-title>
+                    <v-card-subtitle class="text-center text-grey-darken-1">
+                      ${{ product.price }}
+                    </v-card-subtitle>
+                  </v-card>
+                </div>
+              </div>
+            </div>
+          </v-sheet>
+        </v-container>
+      </v-parallax>
     </section>
   </v-main>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref, onBeforeUnmount } from 'vue'
+import { useRouter } from 'vue-router'
 import { useProductStore } from '../stores/products'
-import ProductCard from '../components/ProductoCard.vue'
+import type { Product } from '../types/product'
 
 const productStore = useProductStore()
+const router = useRouter()
+const placeholderImage = 'https://via.placeholder.com/300x200?text=Sin+imagen'
+const scrollX = ref(0)
+let intervalId: number | null = null
 
-onMounted(() => {
-  productStore.fetchProducts()
+onMounted(async () => {
+  await productStore.fetchProducts()
+
+  // ✅ Animación automática cada 3s
+  const speed = 1 // velocidad de movimiento (px por frame)
+  intervalId = window.setInterval(() => {
+    const trackWidth = document.querySelector('.carousel-track')?.scrollWidth || 0
+    const containerWidth = document.querySelector('.carousel-container')?.clientWidth || 0
+    scrollX.value += speed
+
+    // Reinicia el scroll cuando llega al final
+    if (scrollX.value >= trackWidth - containerWidth) {
+      scrollX.value = 0
+    }
+  }, 20) // cada 20ms para fluidez (~50fps)
 })
 
-const addToCart = (product: any) => {
-  console.log('Agregar al carrito:', product)
+onBeforeUnmount(() => {
+  if (intervalId) window.clearInterval(intervalId)
+})
+
+const getImageUrl = (imageUrl: string | null | undefined): string => {
+  if (!imageUrl) return placeholderImage
+  return `http://localhost:3333${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`
+}
+
+const onImageError = (event: Event) => {
+  const target = event.target as HTMLImageElement
+  if (target) target.src = placeholderImage
+}
+
+const goToProduct = (productId: number) => {
+  router.push(`/producto/${productId}`)
 }
 </script>
+
+<style scoped>
+.hero-section {
+  position: relative;
+}
+.bg-opacity-90 {
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.carousel-container {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.3s ease;
+  will-change: transform;
+}
+
+.carousel-item {
+  min-width: 240px;
+  margin-right: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+}
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+</style>
