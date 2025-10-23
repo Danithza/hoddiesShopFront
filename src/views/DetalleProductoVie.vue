@@ -5,7 +5,7 @@
         <!-- Imagen del producto -->
         <v-col cols="12" md="6">
           <v-img
-            :src="product.imageUrl || '/placeholder-product.jpg'"
+            :src="getImageUrl(product.imageUrl)"
             :alt="product.name"
             height="500"
             cover
@@ -85,14 +85,18 @@
                   <template v-slot:prepend>
                     <v-icon color="primary">mdi-truck-fast</v-icon>
                   </template>
-                  <v-list-item-title>Envío gratis en compras mayores a $50</v-list-item-title>
+                  <v-list-item-title>
+                    Envío gratis en compras mayores a $50
+                  </v-list-item-title>
                 </v-list-item>
+
                 <v-list-item>
                   <template v-slot:prepend>
                     <v-icon color="primary">mdi-shield-check</v-icon>
                   </template>
                   <v-list-item-title>Garantía de calidad</v-list-item-title>
                 </v-list-item>
+
                 <v-list-item>
                   <template v-slot:prepend>
                     <v-icon color="primary">mdi-rotate-3d</v-icon>
@@ -146,6 +150,14 @@ const product = ref<Product | null>(null)
 const loading = ref(true)
 const error = ref<string | null>(null)
 
+const BASE_URL = 'http://localhost:3333' // URL de tu backend
+
+// 🖼️ Construye correctamente la ruta de la imagen
+const getImageUrl = (imageUrl: string | null | undefined): string => {
+  if (!imageUrl) return '/placeholder-product.jpg'
+  return `${BASE_URL}${imageUrl.startsWith('/') ? imageUrl : '/' + imageUrl}`
+}
+
 const breadcrumbs = computed(() => [
   {
     title: 'Inicio',
@@ -184,8 +196,8 @@ onMounted(async () => {
 
 const addToCart = (): void => {
   if (product.value) {
-    console.log('Agregar al carrito:', product.value)
-    // Implementar lógica real del carrito aquí
+    console.log('🛒 Agregar al carrito:', product.value)
+    // Aquí irá la lógica real del carrito
   }
 }
 </script>

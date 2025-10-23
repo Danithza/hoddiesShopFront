@@ -39,7 +39,7 @@
       <button type="submit" class="boton">Registrarse</button>
     </form>
 
-    <!-- Mensaje moderno -->
+    <!-- Toast moderno -->
     <transition name="fade">
       <div v-if="mensaje" :class="['toast', error ? 'error' : 'exito']">
         {{ mensaje }}
@@ -58,11 +58,13 @@ const password = ref('')
 const mensaje = ref('')
 const error = ref(false)
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+// ✅ Regex igual al backend
+const emailRegex =
+  /^[a-zA-Z0-9._%+-]+@([a-zA-Z]+\.)+(com|co|net|org|edu|gov|info|io|es|mx|ar|cl|pe)$/
 const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{3,40}$/
 
 async function registrarUsuario() {
-  // Validación frontend rápida
+  // Validaciones frontend
   if (!nameRegex.test(nombre.value)) {
     mostrarMensaje('El nombre solo puede contener letras y espacios.', true)
     return
@@ -89,6 +91,16 @@ async function registrarUsuario() {
     password.value = ''
   } catch (err) {
     mostrarMensaje(err.response?.data?.error || 'Error al registrar usuario.', true)
+
+    // Limpia campos si el error no es de validación
+    if (
+      !err.response?.data?.error?.includes('válido') &&
+      !err.response?.data?.error?.includes('registrado')
+    ) {
+      nombre.value = ''
+      correo.value = ''
+      password.value = ''
+    }
   }
 }
 
@@ -155,7 +167,7 @@ input {
   background-color: #3b82f6;
 }
 
-/* Mensaje flotante */
+/* Toast de éxito/error */
 .toast {
   position: fixed;
   bottom: 30px;
