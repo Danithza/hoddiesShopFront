@@ -6,6 +6,7 @@ import InicioView from '@/views/InicioView.vue'
 import ProductosView from '@/views/ProductosView.vue'
 import DetalleProductoVie from '../views/DetalleProductoVie.vue'
 import ContactoView from '@/views/ContactoView.vue'
+import AdminView from '@/views/AdminView.vue'
 
 // 🧢 Vistas por categoría
 import SacosView from '@/views/SacosView.vue'
@@ -23,6 +24,7 @@ const router = createRouter({
         { path: 'productos', name: 'productos', component: ProductosView },
         { path: 'producto/:id', name: 'detalle', component: DetalleProductoVie },
         { path: 'contacto', name: 'contacto', component: ContactoView },
+         { path: 'Admin', name: 'Admin', component: AdminView },
 
         // 🧩 Categorías
         { path: 'sacos', name: 'sacos', component: SacosView },
