@@ -1,12 +1,17 @@
+// main.ts
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
 import { createPinia } from 'pinia'
+
+// Vuetify
+import 'vuetify/styles'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+
+// Material Design Icons
 import '@mdi/font/css/materialdesignicons.css'
-import 'vuetify/styles'
 
 const vuetify = createVuetify({
   components,
@@ -16,10 +21,14 @@ const vuetify = createVuetify({
     themes: {
       light: {
         colors: {
-          primary: '#1E40AF', // Azul marino (30%)
-          secondary: '#3B82F6', // Azul vibrante (10%)
-          background: '#FFFFFF', // Blanco puro (60%)
-          surface: '#FFFFFF',
+          primary: '#1E40AF',    // Azul marino
+          secondary: '#3B82F6',  // Azul vibrante
+          background: '#FFFFFF',  // Blanco principal
+          surface: '#F3F4F6',     // Gris acento
+          error: '#EF4444',       // Rojo para errores
+          info: '#3B82F6',
+          success: '#10B981',
+          warning: '#F59E0B'
         }
       }
     }
@@ -29,7 +38,8 @@ const vuetify = createVuetify({
 const pinia = createPinia()
 const app = createApp(App)
 
-app.use(pinia) // ✅ Pinia debe ir antes del router
+// Orden correcto de uso
+app.use(pinia)
 app.use(router)
 app.use(vuetify)
 

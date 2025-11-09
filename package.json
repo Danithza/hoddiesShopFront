@@ -18,6 +18,7 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "@mdi/font": "^7.4.47",
+    "@mdi/js": "^7.4.47",
     "axios": "^1.12.2",
     "pinia": "^3.0.3",
     "router": "^2.2.0",
