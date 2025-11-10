@@ -7,19 +7,20 @@
         color="white"
         class="nav-icon-custom"
         size="small"
+        :class="{ 'nav-icon-active': drawer }"
       />
 
       <router-link to="/" class="text-decoration-none ml-3 logo-custom">
-        <div class="d-flex align-center">
-          <div class="logo-icon">👕</div>
-          <span class="text-h5 font-weight-black text-white ml-2">HOODIE</span>
+        <div class="d-flex align-center logo-hover">
+          <Shirt class="icon-logo text-white" />
+          <span class="text-h5 font-weight-black text-white ml-2 logo-text">HODDIES</span>
         </div>
       </router-link>
     </div>
 
     <v-spacer />
 
-    <!-- Desktop Navigation Mejorado -->
+    <!-- Desktop Navigation -->
     <div class="d-none d-md-flex align-center navigation-desktop">
       <v-btn
         v-for="item in navItems"
@@ -30,9 +31,10 @@
         class="mx-1 nav-btn-custom"
         height="44"
         rounded="pill"
+        :class="{ 'nav-btn-active': $route.path === item.to }"
       >
         <div class="btn-content">
-          <div class="btn-icon">{{ item.icon }}</div>
+          <component :is="item.icon" :class="['icon-colored', item.color]" />
           <span class="btn-text">{{ item.title }}</span>
         </div>
       </v-btn>
@@ -40,18 +42,18 @@
 
     <v-spacer />
 
-    <!-- Acciones de Usuario Mejoradas -->
+    <!-- Acciones de Usuario -->
     <div class="d-flex align-center actions-container">
-      <!-- Carrito Mejorado -->
       <v-btn
         icon
         color="white"
         @click="cartVisible = true"
         class="mx-2 cart-btn-custom"
         size="large"
+        :class="{ 'cart-pulse': cartStore.totalItems > 0 }"
       >
         <div class="cart-container">
-          <div class="cart-icon">🛒</div>
+          <ShoppingCart class="icon-colored text-yellow-400" />
           <v-badge
             :content="cartStore.totalItems"
             :model-value="cartStore.totalItems > 0"
@@ -61,32 +63,33 @@
         </div>
       </v-btn>
 
-      <!-- Usuario Mejorado -->
+      <!-- Usuario -->
       <v-btn
         v-if="user"
         color="white"
         variant="text"
-        class="user-btn-custom mx-2"
+        class="user-btn-custom mx-2 user-glow"
         rounded="pill"
         height="44"
       >
         <div class="user-content">
-          <div class="user-avatar">👤</div>
+          <User class="icon-colored text-green-400" />
           <span class="user-name d-none d-sm-inline">{{ user.fullName?.split(' ')[0] }}</span>
         </div>
       </v-btn>
 
+      <!-- 🔹 Botón ingresar corregido -->
       <v-btn
         v-else
         color="white"
-        variant="outlined"
-        class="user-btn-custom mx-2"
+        variant="text"
+        class="user-btn-custom mx-2 login-btn-custom"
         :to="'/login'"
         rounded="pill"
         height="44"
       >
         <div class="user-content">
-          <div class="user-avatar">🔐</div>
+          <LogIn class="icon-colored text-blue-400" />
           <span class="user-name">Ingresar</span>
         </div>
       </v-btn>
@@ -95,19 +98,23 @@
     <CartDialog v-model="cartVisible" />
   </v-app-bar>
 
-  <!-- Drawer Mejorado -->
+  <!-- Drawer -->
   <v-navigation-drawer v-model="drawer" temporary width="320" class="custom-drawer">
-    <v-container class="pa-4 drawer-container">
-      <!-- Header del Drawer -->
+    <v-container class="pa-4">
+      <!-- Header -->
       <div class="drawer-header text-center mb-6">
-        <div class="drawer-logo">👕</div>
-        <h3 class="text-primary font-weight-black mt-2">HOODIE SHOP</h3>
+        <div class="logo-circle mx-auto mb-3 logo-pulse">
+          <Shirt class="icon-logo text-white" style="width:42px;height:42px;" />
+        </div>
+        <h3 class="text-black font-weight-black mt-1">HODDIES SHOP</h3>
         <p class="text-caption text-grey-darken-1">Tu estilo, nuestra pasión</p>
       </div>
 
-      <!-- Categorías Mejoradas -->
-      <div class="categories-section">
-        <h4 class="text-uppercase font-weight-bold text-caption text-grey-darken-1 mb-3">Categorías</h4>
+      <!-- Categorías -->
+      <div class="categories-section mb-4">
+        <h4 class="text-uppercase font-weight-bold text-caption text-grey-darken-1 mb-3">
+          Categorías
+        </h4>
         <v-row dense>
           <v-col v-for="cat in categorias" :key="cat.title" cols="6" class="pa-2">
             <v-card
@@ -115,71 +122,70 @@
               @click="openCategory(cat.to)"
               variant="flat"
               height="100"
+              :class="{ 'category-card-hover': true }"
             >
               <v-card-text class="text-center pa-3">
-                <div class="category-icon-custom">{{ cat.icon }}</div>
-                <div class="category-title text-caption font-weight-bold mt-1">{{ cat.title }}</div>
+                <component :is="cat.icon" class="icon-colored text-indigo-600 category-icon" />
+                <div class="category-title text-caption font-weight-bold mt-2 text-black">
+                  {{ cat.title }}
+                </div>
               </v-card-text>
             </v-card>
           </v-col>
         </v-row>
       </div>
 
-      <v-divider class="my-6" />
+      <v-divider class="my-6"></v-divider>
 
-      <!-- Acciones de Usuario Mejoradas -->
+      <!-- Acciones Usuario -->
       <div class="user-actions">
         <template v-if="!user">
           <v-btn
             block
-            color="primary"
-            variant="flat"
+            class="btn-gradient mb-3 login-btn-drawer"
             :to="'/login'"
             @click="drawer = false"
-            class="mb-3 login-btn-custom"
             size="large"
             rounded="pill"
           >
-            <div class="btn-content">
-              <div class="btn-icon">🚪</div>
+            <div class="btn-content text-white">
+              <LogIn class="icon-colored text-white" />
               <span>Iniciar Sesión</span>
             </div>
           </v-btn>
+
           <v-btn
             block
-            color="primary"
-            variant="outlined"
+            class="btn-outline-gradient register-btn-drawer"
             :to="'/registro'"
             @click="drawer = false"
-            class="register-btn-custom"
             size="large"
             rounded="pill"
           >
-            <div class="btn-content">
-              <div class="btn-icon">📝</div>
+            <div class="btn-content text-primary">
+              <UserPlus class="icon-colored text-primary" />
               <span>Registrarse</span>
             </div>
           </v-btn>
         </template>
+
         <template v-else>
-          <div class="user-info-custom text-center mb-4">
-            <div class="user-avatar-large">👤</div>
+          <div class="user-info-custom text-center mb-4 user-info-glow">
+            <User class="icon-colored text-indigo-600" style="width:48px;height:48px;" />
             <div class="user-details mt-2">
-              <div class="text-body-1 font-weight-bold">{{ user.fullName }}</div>
-              <div class="text-caption text-grey-darken-2">{{ user.email }}</div>
+              <div class="text-body-1 font-weight-bold text-black">{{ user.fullName }}</div>
+              <div class="text-caption text-grey-darken-1">{{ user.email }}</div>
             </div>
           </div>
           <v-btn
             block
-            color="error"
-            variant="outlined"
+            class="btn-outline-gradient logout-btn-drawer"
             @click="cerrarSesion"
-            class="logout-btn-custom"
             size="large"
             rounded="pill"
           >
-            <div class="btn-content">
-              <div class="btn-icon">🚪</div>
+            <div class="btn-content text-red-600">
+              <LogOut class="icon-colored text-red-500" />
               <span>Cerrar Sesión</span>
             </div>
           </v-btn>
@@ -190,30 +196,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useCartStore } from '@/stores/cart'
 import axios from 'axios'
 import CartDialog from './CartDialog.vue'
+import { Home, Shirt, Phone, ShoppingCart, User, LogIn, LogOut, UserPlus } from 'lucide-vue-next'
 
 const drawer = ref(false)
 const cartVisible = ref(false)
 const router = useRouter()
+const route = useRoute()
 const cartStore = useCartStore()
-
 const user = ref<any>(null)
 
 const navItems = [
-  { title: 'Inicio', to: '/', icon: '🏠' },
-  { title: 'Productos', to: '/productos', icon: '👕' },
-  { title: 'Contacto', to: '/contacto', icon: '📞' }
+  { title: 'Inicio', to: '/', icon: Home, color: 'text-blue-400' },
+  { title: 'Productos', to: '/productos', icon: Shirt, color: 'text-indigo-400' },
+  { title: 'Contacto', to: '/contacto', icon: Phone, color: 'text-green-400' },
 ]
 
 const categorias = [
-  { title: 'Sacos', to: '/sacos', icon: '🧥' },
-  { title: 'Busos', to: '/busos', icon: '🦺' },
-  { title: 'Medias', to: '/medias', icon: '🧦' }
+  { title: 'Sacos', to: '/sacos', icon: Shirt },
+  { title: 'Busos', to: '/busos', icon: Shirt },
+  { title: 'Medias', to: '/medias', icon: Shirt },
 ]
+
+// Computed para ruta activa
+const activeRoute = computed(() => route.path)
 
 onMounted(() => {
   const storedUser = localStorage.getItem('user')
@@ -227,231 +237,269 @@ function openCategory(to: string) {
 
 async function cerrarSesion() {
   try {
-    await axios.post("http://localhost:3333/logout", {}, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+    await axios.post('http://localhost:3333/logout', {}, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     })
   } catch {}
-  localStorage.removeItem("token")
-  localStorage.removeItem("user")
+  localStorage.removeItem('token')
+  localStorage.removeItem('user')
   user.value = null
   drawer.value = false
-  router.push("/login")
+  router.push('/login')
 }
 </script>
 
 <style scoped>
-.custom-navbar {
-  background: linear-gradient(135deg, #1E40AF 0%, #3B82F6 100%) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.custom-drawer {
+  background: white;
+  color: black;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
-/* Logo Styles */
-.logo-custom:hover {
-  transform: scale(1.05);
-  transition: transform 0.3s ease;
-}
-
-.logo-icon {
-  font-size: 28px;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-}
-
-/* Navigation Buttons */
-.nav-btn-custom {
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.nav-btn-custom:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-  transform: translateY(-3px) scale(1.05);
-  box-shadow:
-    0 8px 25px rgba(255, 255, 255, 0.15),
-    0 4px 12px rgba(255, 255, 255, 0.1);
-}
-
-.btn-content {
+.logo-circle {
+  background: linear-gradient(90deg, #6d28d9, #3b82f6);
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 8px;
+  transition: all 0.4s ease;
 }
 
-.btn-icon {
-  font-size: 18px;
+.logo-pulse:hover {
+  animation: pulse 2s infinite;
+  transform: scale(1.05);
+}
+
+.category-card-custom {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.category-card-hover:hover {
+  background: linear-gradient(135deg, #ede9fe, #f3f4f6);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.15);
+  border-color: #8b5cf6;
+}
+
+.category-card-hover:hover .category-icon {
+  transform: scale(1.1);
   transition: transform 0.3s ease;
 }
 
-.nav-btn-custom:hover .btn-icon {
-  transform: scale(1.2) rotate(5deg);
-}
-
-.btn-text {
+.btn-gradient {
+  background: linear-gradient(90deg, #6d28d9, #3b82f6);
+  color: white !important;
   font-weight: 600;
-  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
 }
 
-/* Cart Button */
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(99, 102, 241, 0.4);
+}
+
+.btn-outline-gradient {
+  border: 2px solid #6d28d9;
+  color: #6d28d9 !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-gradient:hover {
+  background: #ede9fe;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.icon-logo {
+  stroke-width: 2.4;
+  transition: all 0.3s ease;
+}
+
+.icon-colored {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2.3;
+  transition: all 0.3s ease;
+}
+
+/* Interactividad mejorada */
+.nav-icon-custom {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+}
+
+.nav-icon-active {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(90deg);
+}
+
+.logo-hover:hover .icon-logo {
+  transform: rotate(-15deg) scale(1.1);
+}
+
+.logo-hover:hover .logo-text {
+  background: linear-gradient(90deg, #ffffff, #e5e7eb);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.3s ease;
+}
+
+.nav-btn-custom {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.nav-btn-custom::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-btn-custom:hover::before {
+  width: 80%;
+}
+
+.nav-btn-active::before {
+  width: 80%;
+}
+
+.nav-btn-custom:hover .icon-colored {
+  transform: scale(1.2) translateY(-2px);
+}
+
+.nav-btn-active .icon-colored {
+  transform: scale(1.2);
+  filter: drop-shadow(0 2px 4px rgba(255, 255, 255, 0.3));
+}
+
 .cart-btn-custom {
-  transition: all 0.3s ease !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  border-radius: 12px !important;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
 .cart-btn-custom:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-  transform: scale(1.1) rotate(-5deg);
+  transform: scale(1.1);
 }
 
-.cart-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.cart-pulse .cart-container {
+  animation: gentlePulse 2s infinite;
 }
 
-.cart-icon {
-  font-size: 22px;
-}
-
-.cart-badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-}
-
-/* User Button */
 .user-btn-custom {
-  transition: all 0.3s ease !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.user-btn-custom:hover {
-  background: rgba(255, 255, 255, 0.2) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
-}
-
-.user-content {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.user-avatar {
-  font-size: 18px;
-}
-
-.user-name {
-  font-weight: 600;
-}
-
-/* Drawer Styles */
-.custom-drawer {
-  border-radius: 0 20px 20px 0;
-}
-
-.drawer-container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.drawer-header {
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.drawer-logo {
-  font-size: 48px;
-  filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
-}
-
-/* Category Cards */
-.category-card-custom {
-  cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
-  border: 2px solid transparent;
+  transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
 }
 
-.category-card-custom::before {
+.user-btn-custom:hover {
+  transform: translateY(-2px);
+}
+
+.user-glow:hover {
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+}
+
+/* 🔹 Botón ingresar corregido - mismo estilo que los otros */
+.login-btn-custom {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.login-btn-custom::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(30, 64, 175, 0.1), transparent);
-  transition: left 0.6s ease;
-}
-
-.category-card-custom:hover::before {
-  left: 100%;
-}
-
-.category-card-custom:hover {
-  border-color: #1E40AF;
-  background: linear-gradient(135deg, #ffffff 0%, #e3f2fd 100%) !important;
-  transform: translateY(-5px) scale(1.05);
-  box-shadow:
-    0 15px 35px rgba(30, 64, 175, 0.15),
-    0 5px 15px rgba(30, 64, 175, 0.1);
-}
-
-.category-icon-custom {
-  font-size: 32px;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
   transition: all 0.3s ease;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  transform: translateX(-50%);
 }
 
-.category-card-custom:hover .category-icon-custom {
-  transform: scale(1.2) rotate(10deg);
-  filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
+.login-btn-custom:hover::before {
+  width: 80%;
 }
 
-.category-title {
-  color: #374151;
-  transition: color 0.3s ease;
+.login-btn-custom:hover .icon-colored {
+  transform: scale(1.2) translateY(-2px);
 }
 
-.category-card-custom:hover .category-title {
-  color: #1E40AF;
+.login-btn-drawer:hover,
+.register-btn-drawer:hover,
+.logout-btn-drawer:hover {
+  transform: translateY(-2px) scale(1.02);
 }
 
-/* User Actions in Drawer */
-.user-actions {
-  margin-top: auto;
+.user-info-glow:hover {
+  transform: scale(1.02);
+  transition: transform 0.3s ease;
 }
 
-.user-avatar-large {
-  font-size: 48px;
-  filter: drop-shadow(0 4px 8px rgba(30, 64, 175, 0.3));
+/* Animaciones */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(99, 102, 241, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(99, 102, 241, 0);
+  }
 }
 
-.login-btn-custom:hover,
-.register-btn-custom:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(30, 64, 175, 0.3);
+@keyframes gentlePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
-.logout-btn-custom:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+/* Efectos de transición suaves */
+.btn-content, .user-content {
+  transition: all 0.3s ease;
 }
 
-/* Navigation Desktop Container */
-.navigation-desktop {
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  padding-left: 20px;
+.nav-btn-custom:hover .btn-content {
+  transform: translateY(-1px);
 }
 
-.actions-container {
-  border-left: 1px solid rgba(255, 255, 255, 0.2);
-  padding-left: 20px;
+.user-btn-custom:hover .user-content {
+  transform: translateY(-1px);
+}
+
+/* Mejora visual para badges */
+.cart-badge {
+  animation: bounce 0.5s ease;
+}
+
+@keyframes bounce {
+  0%, 20%, 60%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-5px);
+  }
+  80% {
+    transform: translateY(-2px);
+  }
 }
 </style>
