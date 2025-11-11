@@ -18,7 +18,7 @@
 
           <v-btn
             size="x-large"
-            color="secondary"
+            color="primary"
             variant="flat"
             to="/productos"
             class="px-8 mb-10 btn-hero"
@@ -27,7 +27,7 @@
             Comprar Ahora
           </v-btn>
 
-          <!-- 🎠 Carrusel automático de productos MEJORADO -->
+          <!-- 🎠 Carrusel automático de productos -->
           <v-sheet
             class="pa-6 rounded-xl stylish-carousel"
             width="100%"
@@ -196,7 +196,7 @@
                 ${{ product.price }}
               </p>
 
-              <!-- BOTÓN DE CARRITO DE COMPRA MEJORADO -->
+              <!-- BOTÓN DE CARRITO DE COMPRA -->
               <div class="product-actions">
                 <v-btn
                   color="primary"
@@ -240,10 +240,10 @@
       </v-container>
     </section>
 
-    <!-- 🧾 Footer Moderno COMPLETO -->
+    <!-- 🧾 Footer Moderno -->
     <footer class="footer-moderno">
       <v-container class="footer-container">
-        <!-- Sección de Newsletter ULTRA COMPACTA -->
+        <!-- Sección de Newsletter -->
         <div class="newsletter-section-ultra-compact text-center mb-4">
           <div class="newsletter-content-ultra-compact">
             <div class="newsletter-header">
@@ -296,7 +296,7 @@
             </div>
           </v-col>
 
-          <!-- Métodos de pago MEJORADO -->
+          <!-- Métodos de pago -->
           <v-col cols="12" md="4" class="info-column">
             <div class="info-group">
               <h4 class="info-group-title">
@@ -304,7 +304,6 @@
                 Medios de Pago
               </h4>
 
-              <!-- Versión compacta y visual mejorada -->
               <div class="payment-methods-compact">
                 <div class="payment-icons-grid">
                   <div
@@ -500,8 +499,23 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 </script>
 
 <style scoped>
+/* FONDO AZUL CLARO EN TODAS LAS SECCIONES */
 .fondo-general {
-  background: linear-gradient(180deg, #ede9fe 0%, #f9fafb 100%);
+  background: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 100%) !important;
+}
+
+.hero-section {
+  background: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 100%) !important;
+}
+
+.nuevos-productos {
+  background: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 100%) !important;
+}
+
+.footer-moderno {
+  background: linear-gradient(180deg, #e0f2fe 0%, #f0f9ff 100%) !important;
+  border-top: 3px solid;
+  border-image: linear-gradient(90deg, #0284c7, #0ea5e9, #0284c7) 1;
 }
 
 /* Hero */
@@ -516,17 +530,17 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
   color: #f1f1f1;
 }
 .btn-hero {
-  background: linear-gradient(90deg, #6d28d9, #3b82f6);
-  color: white;
+  background: linear-gradient(90deg, #0284c7, #0ea5e9) !important;
+  color: white !important;
   font-weight: bold;
 }
 
-/* Carrusel MEJORADO */
+/* Carrusel - AZUL CLARO */
 .stylish-carousel {
-  background: linear-gradient(135deg, #ede9fe, #f5f3ff);
+  background: linear-gradient(135deg, #e0f2fe, #f0f9ff) !important;
   border-radius: 16px;
   border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 10px 30px rgba(30, 64, 175, 0.15);
+  box-shadow: 0 10px 30px rgba(2, 132, 199, 0.15);
   backdrop-filter: blur(8px);
   max-width: 1200px;
   margin: 0 auto;
@@ -535,8 +549,9 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
   width: 28px;
   height: 28px;
   stroke-width: 2.5;
-  color: #6d28d9;
+  color: #0284c7 !important;
 }
+
 .carousel-wrapper {
   position: relative;
   display: flex;
@@ -587,7 +602,7 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
   z-index: 10;
 }
 .carousel-btn:hover {
-  background: #e0e7ff;
+  background: #e0f2fe !important;
 }
 .carousel-btn.left {
   left: 10px;
@@ -596,13 +611,10 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
   right: 10px;
 }
 
-/* Lo más nuevo */
-.nuevos-productos {
-  background: linear-gradient(180deg, #ede9fe 0%, #f9fafb 100%);
-}
+/* Lo más nuevo - AZUL CLARO */
 .nuevos-card {
   border-radius: 16px;
-  background: linear-gradient(145deg, #ffffff, #f3f4f6);
+  background: linear-gradient(145deg, #ffffff, #f0f9ff) !important;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -610,7 +622,7 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 }
 .nuevos-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 25px rgba(109, 40, 217, 0.25);
+  box-shadow: 0 10px 25px rgba(2, 132, 199, 0.25) !important;
 }
 
 /* BOTONES DE ACCIÓN PARA PRODUCTOS NUEVOS */
@@ -619,7 +631,7 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 }
 
 .btn-carrito {
-  background: linear-gradient(90deg, #6d28d9, #3b82f6) !important;
+  background: linear-gradient(90deg, #0284c7, #0ea5e9) !important;
   color: white !important;
   font-weight: 600;
   transition: all 0.3s ease;
@@ -629,12 +641,12 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 
 .btn-carrito:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.4) !important;
 }
 
 .btn-detalle {
-  border: 2px solid #3b82f6 !important;
-  color: #3b82f6 !important;
+  border: 2px solid #0284c7 !important;
+  color: #0284c7 !important;
   font-weight: 500;
   transition: all 0.3s ease;
   border-radius: 8px;
@@ -642,24 +654,23 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 }
 
 .btn-detalle:hover {
-  background: #3b82f6 !important;
+  background: #0284c7 !important;
   color: white !important;
   transform: translateY(-1px);
 }
 
 .btn-ver-mas {
   transition: all 0.3s ease;
-  border: 2px solid #3b82f6;
-  color: #3b82f6;
+  border: 2px solid #0284c7 !important;
+  color: #0284c7 !important;
 }
 .btn-ver-mas:hover {
-  background: #3b82f6;
-  color: white;
+  background: #0284c7 !important;
+  color: white !important;
   transform: translateX(5px);
 }
 
 /* MEJORAS PARA EL CARRUSEL */
-
 .image-container {
   position: relative;
   overflow: hidden;
@@ -678,7 +689,7 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
   position: absolute;
   top: 10px;
   left: 10px;
-  background: linear-gradient(90deg, #ef4444, #f59e0b);
+  background: linear-gradient(90deg, #0284c7, #0ea5e9) !important;
   color: white;
   padding: 4px 8px;
   border-radius: 12px;
@@ -706,7 +717,7 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 
 /* ESTILOS ESPECÍFICOS PARA ICONOS VISIBLES */
 .action-btn :deep(.v-icon) {
-  color: #3b82f6 !important;
+  color: #0284c7 !important;
 }
 
 .card-action-btn :deep(.v-icon) {
@@ -730,16 +741,15 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 }
 
 .indicator-dot.active {
-  background: #6d28d9;
+  background: #0284c7 !important;
   transform: scale(1.2);
 }
 
 .indicator-dot:hover {
-  background: #3b82f6;
+  background: #0ea5e9 !important;
 }
 
 /* MEJORAS PARA PRODUCTOS NUEVOS */
-
 .image-wrapper {
   position: relative;
   cursor: pointer;
@@ -749,7 +759,7 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
   position: absolute;
   top: 10px;
   right: 10px;
-  background: linear-gradient(90deg, #10b981, #059669);
+  background: linear-gradient(90deg, #0284c7, #0ea5e9) !important;
   color: white;
   padding: 4px 8px;
   border-radius: 12px;
@@ -790,7 +800,7 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 }
 
 .product-name:hover {
-  color: #3b82f6 !important;
+  color: #0284c7 !important;
 }
 
 /* ESTILOS MEJORADOS PARA MÉTODOS DE PAGO */
@@ -844,7 +854,7 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
   line-height: 1.2;
 }
 
-/* NEWSLETTER ULTRA COMPACTA */
+/* NEWSLETTER */
 .newsletter-section-ultra-compact {
   padding: 1rem 0;
 }
@@ -915,8 +925,8 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 
 .newsletter-btn-ultra-compact {
   transition: all 0.3s ease;
-  background: linear-gradient(90deg, #6d28d9, #3b82f6);
-  color: white;
+  background: linear-gradient(90deg, #0284c7, #0ea5e9) !important;
+  color: white !important;
   font-weight: 500;
   white-space: nowrap;
   font-size: 0.75rem;
@@ -926,19 +936,10 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 
 .newsletter-btn-ultra-compact:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3) !important;
 }
 
-/* FOOTER COMPLETO RESTAURADO */
-.footer-moderno {
-  background: linear-gradient(180deg, #ede9fe 0%, #f9fafb 100%);
-  color: #111827;
-  padding: 30px 0 20px;
-  position: relative;
-  border-top: 3px solid;
-  border-image: linear-gradient(90deg, #6d28d9, #3b82f6, #6d28d9) 1;
-}
-
+/* FOOTER COMPLETO */
 .footer-container {
   position: relative;
   z-index: 2;
@@ -1001,7 +1002,7 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
 }
 
 .legal-link:hover {
-  color: #3b82f6;
+  color: #0284c7 !important;
   transform: translateX(5px);
   transition: all 0.3s ease;
 }
@@ -1031,17 +1032,17 @@ const nuevosProductos = computed(() => [...productStore.products].reverse().slic
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6d28d9, #3b82f6);
+  background: linear-gradient(135deg, #0284c7, #0ea5e9) !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3) !important;
 }
 
 .brand-text {
   font-weight: 700;
   font-size: 1.125rem;
-  color: #6d28d9;
+  color: #0284c7 !important;
   font-family: 'Poppins', sans-serif;
 }
 
