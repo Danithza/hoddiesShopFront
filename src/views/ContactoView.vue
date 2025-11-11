@@ -1,5 +1,5 @@
 <template>
-  <v-main>
+  <v-main class="contacto-fondo">
     <v-container class="py-10 categoria-container">
       <h1 class="text-h3 font-weight-bold text-center mb-4 categoria-titulo">
         Contáctanos
@@ -12,7 +12,7 @@
       <v-row>
         <!-- Información de contacto -->
         <v-col cols="12" md="6">
-          <v-card class="pa-6 h-100" elevation="12">
+          <v-card class="pa-6 h-100 contacto-card" elevation="12">
             <h3 class="text-h5 font-weight-bold mb-6">Nuestros Contactos</h3>
 
             <div class="mb-6 d-flex align-center">
@@ -55,7 +55,7 @@
 
         <!-- Formulario -->
         <v-col cols="12" md="6">
-          <v-card class="pa-6 h-100" elevation="12">
+          <v-card class="pa-6 h-100 contacto-card" elevation="12">
             <h3 class="text-h5 font-weight-bold mb-6">Envíanos un Mensaje</h3>
 
             <v-form @submit.prevent="sendEmail" ref="formRef">
@@ -106,7 +106,7 @@
                   <v-btn
                     color="primary"
                     size="large"
-                    class="w-100 mt-2"
+                    class="w-100 mt-2 boton-enviar"
                     type="submit"
                     :loading="loading"
                     elevation="2"
@@ -161,6 +161,9 @@ const showMessage = (message: string, color: 'success' | 'error') => {
   snackbar.show = true
 }
 
+// Lista de dominios permitidos (ajusta aquí si quieres solo gmail y hotmail)
+const ALLOWED_DOMAINS = ['gmail.com', 'hotmail.com', 'outlook.com', 'yahoo.com']
+
 // Validar campos
 const validateField = (field: keyof typeof formData) => {
   const value = formData[field].trim()
@@ -179,18 +182,35 @@ const validateField = (field: keyof typeof formData) => {
   }
 
   if (field === 'email') {
-    // validación de formato
-    const emailPattern = /^[A-Za-z0-9._%+-]+@([A-Za-z0-9-]+\.)+[A-Za-z]{2,}$/
-    const domain = value.split('@')[1]?.toLowerCase() || ''
-    const domainRegex = /^[a-z0-9-]+(\.[a-z]{2,})+$/
+    // No permitir comas ni espacios
+    if (value.includes(',') || /\s/.test(value)) {
+      errors.email = 'El correo no puede contener comas ni espacios'
+      return
+    }
 
+    // No permitir puntos consecutivos
+    if (/\.\./.test(value)) {
+      errors.email = 'Formato de correo inválido (puntos consecutivos)'
+      return
+    }
+
+    // Validación básica de formato
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/
     if (!emailPattern.test(value)) {
       errors.email = 'Formato de email inválido'
       return
     }
 
-    if (!domainRegex.test(domain) || /(.)\1{2,}/.test(domain) || /[0-9]{2,}/.test(domain)) {
-      errors.email = 'Dominio de correo no válido'
+    // Verificar dominio permitido (ej: gmail.com, hotmail.com, etc.)
+    const domain = value.split('@')[1]?.toLowerCase() || ''
+    if (!ALLOWED_DOMAINS.includes(domain)) {
+      errors.email = `Solo se permiten correos de: ${ALLOWED_DOMAINS.join(', ')}`
+      return
+    }
+
+    // Opcional: evitar dominios con más de 2 dígitos seguidos (ej: no permitir "ex123.com")
+    if (/(?:\d){3,}/.test(domain)) {
+      errors.email = 'Dominio inválido'
       return
     }
 
@@ -260,18 +280,55 @@ const resetForm = () => {
 </script>
 
 <style scoped>
+/* Fondo suave y sutil para la sección (azul claro) */
+.contacto-fondo {
+  background: linear-gradient(135deg, #eef2ff, #e6f0ff);
+}
+
+/* Título principal en azul */
 .categoria-titulo {
-  color: #1e40af;
+  color: #1e40af; /* azul fuerte */
 }
 
-.v-card {
+/* Estilo común para las tarjetas de contacto y formulario */
+.contacto-card {
+  background-color: #ffffffee;
   border-radius: 16px;
+  border: 1px solid #e6eefc;
+  box-shadow: 0 6px 14px rgba(30, 64, 175, 0.08);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 
-.v-btn {
-  transition: none !important; /* sin movimiento */
+.contacto-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(30, 64, 175, 0.12);
 }
 
+/* Botón principal: azul (igual al botón de la página de inicio) */
+.boton-enviar {
+  background: linear-gradient(90deg, #1e40af, #2563eb) !important;
+  color: #ffffff !important;
+  font-weight: 600;
+  border-radius: 10px !important;
+  box-shadow: 0 6px 18px rgba(37, 99, 235, 0.18);
+  text-transform: none !important;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.boton-enviar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(37, 99, 235, 0.26);
+}
+
+/* Campos con fondo sutil y bordes redondeados */
+.v-text-field input,
+.v-textarea textarea {
+  background-color: #eef7ff !important;
+  border-radius: 10px !important;
+  min-height: 90px;
+}
+
+/* Mantener altura mínima como en tu diseño original */
 .v-text-field,
 .v-textarea {
   min-height: 90px;

@@ -25,8 +25,10 @@ import { Shirt } from 'lucide-vue-next'
 
 <style scoped>
 .footer-simple {
-  background: linear-gradient(135deg, #6d28d9 0%, #3b82f6 100%) !important;
+  /* Fondo azul oscuro degradado (más profesional y moderno) */
+  background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #2563eb 100%) !important;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
 }
 
 /* Logo Footer */
@@ -51,6 +53,12 @@ import { Shirt } from 'lucide-vue-next'
   justify-content: center;
 }
 
+/* Texto con más suavidad visual */
+.text-caption {
+  opacity: 0.8;
+  letter-spacing: 0.3px;
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   .footer-simple {
@@ -63,7 +71,7 @@ import { Shirt } from 'lucide-vue-next'
   }
 
   .text-h5 {
-    font-size: 1.5rem !important;
+    font-size: 1.4rem !important;
   }
 }
 </style>
